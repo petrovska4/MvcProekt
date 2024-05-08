@@ -1,0 +1,81 @@
+﻿@model IEnumerable<MvcProekt.Models.Books>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Our Selection</h1>
+
+<p>
+    <a asp-action="Create"><button type="button" class="btn btn-primary">Create New</button></a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.YearPublished)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NumPages)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Publisher)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Author)
+            </th>
+            <th>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                <img height="150px" src="@Html.DisplayFor(modelItem => item.FrontPage)"/>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.YearPublished)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumPages)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Publisher)
+            </td>
+            <td>
+                    @if (item.Author != null)
+                    {
+                        @Html.DisplayFor(modelItem => item.Author.FullName)
+                    }
+
+            </td>
+            <td>
+                <a href="@Html.DisplayFor(modelItem => item.DownloadUrl)">Download here...</a>
+            </td>
+            <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id"><button type="button" class="btn btn-outline-success">Edit</button></a>
+                    <p></p>
+                    <a asp-action="Details" asp-route-id="@item.Id"><button type="button" class="btn btn-outline-success">Details</button></a>
+                    <p></p>
+                    <a asp-action="Delete" asp-route-id="@item.Id"><button type="button" class="btn btn-outline-danger">Delete</button></a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
