@@ -21,13 +21,6 @@ namespace MvcProekt.Models
                 // Look for any movies.
                 if (context.Books.Any() || context.Author.Any() || context.Genres.Any() || context.UserBooks.Any() || context.BookGenre.Any())
                 {
-                    var booksToDelete = context.Books.Where(book => book.Title == "War and Peace" || book.Title == "Crime and Punishment").ToList();
-
-                    // Delete the retrieved books
-                    context.Books.RemoveRange(booksToDelete);
-
-                    // Save changes to the database
-                    context.SaveChanges();
                     return; // DB has been seeded
                 }
                 context.Books.AddRange(
