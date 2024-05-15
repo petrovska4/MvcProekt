@@ -56,16 +56,21 @@ namespace MvcProekt.Migrations
 
             modelBuilder.Entity("MvcProekt.Models.BookGenre", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<int>("BookId")
                         .HasColumnType("int");
 
                     b.Property<int>("GenreId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
+                    b.HasKey("Id");
 
-                    b.HasKey("BookId", "GenreId");
+                    b.HasIndex("BookId");
 
                     b.HasIndex("GenreId");
 

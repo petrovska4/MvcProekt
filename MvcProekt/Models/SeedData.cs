@@ -19,35 +19,57 @@ namespace MvcProekt.Models
             DbContextOptions<MvcProektContext>>()))
             {
                 // Look for any movies.
+                /*if (context.Books.Any() || context.Author.Any() || context.Genres.Any() || context.UserBooks.Any() || context.BookGenre.Any())
+                {
+                    // Retrieve the books you want to delete
+                    var booksToDelete = context.Books.Where(book => book.Title == "War and Peace" || book.Title == "Crime and Punishment").ToList();
+
+                    // Delete the retrieved books
+                    context.Books.RemoveRange(booksToDelete);
+
+                    // Save changes to the database
+                    context.SaveChanges();
+
+                    var authorToDelete = context.Author.Where(author => author.FirstName == "Leo" || author.FirstName == "Fyodor").ToList();
+
+                    // Delete the retrieved books
+                    context.Author.RemoveRange(authorToDelete);
+
+                    // Save changes to the database
+                    context.SaveChanges();
+
+                    var genreToDelete = context.Genres.Where(genre => genre.GenreName == "philosophical" || genre.GenreName == "realism"
+                    || genre.GenreName == "historical" || genre.GenreName == "war literature").ToList();
+
+                    // Delete the retrieved books
+                    context.Genres.RemoveRange(genreToDelete);
+
+                    // Save changes to the database
+                    context.SaveChanges();
+
+                    var reviewToDelete = context.Review.Where(review => review.BookId == 1 || review.BookId == 2).ToList();
+
+                    // Delete the retrieved books
+                    context.Review.RemoveRange(reviewToDelete);
+
+                    // Save changes to the database
+                    context.SaveChanges();
+
+                    var userBooksToDelete = context.UserBooks.Where(ub => ub.BookId == 1 || ub.BookId == 2).ToList();
+
+                    // Delete the retrieved books
+                    context.UserBooks.RemoveRange(userBooksToDelete);
+
+                    // Save changes to the database
+                    context.SaveChanges();
+
+
+                    return; // DB has been seeded
+                }*/
                 if (context.Books.Any() || context.Author.Any() || context.Genres.Any() || context.UserBooks.Any() || context.BookGenre.Any())
                 {
-                    return; // DB has been seeded
+                    return;
                 }
-                context.Books.AddRange(
-                    new Books 
-                    { 
-                        Title = "War and Peace", 
-                        YearPublished = 1986, 
-                        NumPages = 1200,  
-                        Description = "\"War and Peace\" is an epic novel by Leo Tolstoy that chronicles the lives of Russian aristocrats against the backdrop of Napoleon's invasion of Russia, exploring themes of love, war, politics, and the human condition.", 
-                        Publisher = "Russkiy Vestnik", 
-                        AuthorId = 8, 
-                        DownloadUrl = "https://www.planetebook.com/free-ebooks/war-and-peace.pdf", 
-                        FrontPage = "https://www.booksoftitans.com/wp-content/uploads/2017/12/war-and-peace.jpg"
-                    },
-                    new Books
-                    {
-                        Title = "Crime and Punishment",
-                        YearPublished = 1866,
-                        NumPages = 500,
-                        Description = "\"Crime and Punishment\" follows the psychological turmoil of a young Russian intellectual, Raskolnikov, who commits a murder and grapples with the moral consequences, exploring themes of guilt, redemption, and the human condition in 19th-century St. Petersburg.",
-                        Publisher = "Russkiy Vestnik",
-                        AuthorId = 9,
-                        DownloadUrl = "https://www.planetebook.com/free-ebooks/crime-and-punishment.pdf",
-                        FrontPage = "https://qph.cf2.quoracdn.net/main-qimg-60ca2932975ad8fac18089434f1c0d3f-lq"
-                    }
-                );
-                context.SaveChanges();
 
                 context.Author.AddRange(
                     new Author
@@ -69,6 +91,33 @@ namespace MvcProekt.Models
                 );
                 context.SaveChanges();
 
+                context.Books.AddRange(
+                    new Books 
+                    { 
+                        Title = "War and Peace", 
+                        YearPublished = 1986, 
+                        NumPages = 1200,  
+                        Description = "\"War and Peace\" is an epic novel by Leo Tolstoy that chronicles the lives of Russian aristocrats against the backdrop of Napoleon's invasion of Russia, exploring themes of love, war, politics, and the human condition.", 
+                        Publisher = "Russkiy Vestnik", 
+                        AuthorId = 1, 
+                        DownloadUrl = "https://www.planetebook.com/free-ebooks/war-and-peace.pdf", 
+                        FrontPage = "https://www.booksoftitans.com/wp-content/uploads/2017/12/war-and-peace.jpg"
+                    },
+                    new Books
+                    {
+                        Title = "Crime and Punishment",
+                        YearPublished = 1866,
+                        NumPages = 500,
+                        Description = "\"Crime and Punishment\" follows the psychological turmoil of a young Russian intellectual, Raskolnikov, who commits a murder and grapples with the moral consequences, exploring themes of guilt, redemption, and the human condition in 19th-century St. Petersburg.",
+                        Publisher = "Russkiy Vestnik",
+                        AuthorId = 2,
+                        DownloadUrl = "https://www.planetebook.com/free-ebooks/crime-and-punishment.pdf",
+                        FrontPage = "https://qph.cf2.quoracdn.net/main-qimg-60ca2932975ad8fac18089434f1c0d3f-lq"
+                    }
+                );
+
+                context.SaveChanges();
+
                 context.Genres.AddRange(
                     new Genres
                     { 
@@ -87,9 +136,10 @@ namespace MvcProekt.Models
                         GenreName = "war literature",
                     }
                 );
+
                 context.SaveChanges();
 
-                /*context.BookGenre.AddRange(
+                context.BookGenre.AddRange(
                     new BookGenre
                     {
                         BookId = 1,
@@ -116,7 +166,8 @@ namespace MvcProekt.Models
                         GenreId = 2
                     }
                 );
-                context.SaveChanges();*/
+
+                context.SaveChanges();
 
                 context.Review.AddRange(
                     new Review
@@ -176,6 +227,7 @@ namespace MvcProekt.Models
                         Rating = 4
                     }
                 );
+
                 context.SaveChanges();
 
                 context.UserBooks.AddRange(
@@ -223,81 +275,7 @@ namespace MvcProekt.Models
                 context.SaveChanges();
 
 
-                /*
-                context.Movie.AddRange(
-                new Movie
-                {
-                    //Id = 1,
-                    Title = "When Harry Met Sally",
-                    ReleaseDate = DateTime.Parse("1989-2-12"),
-                    Genre = "Romantic Comedy",
-                    Rating = 5,
-                    Price = 7.99M,
-                    DirectorId = context.Director.Single(d => d.FirstName == "Rob" && d.LastName == "Reiner").Id
-                },
-                new Movie
-
-                {
-                    //Id = 2,
-                    Title = "Ghostbusters",
-                    ReleaseDate = DateTime.Parse("1984-3
-- 13"),
- Genre = "Comedy"
-,
-Rating = 6,
-Price = 8.99M,
-DirectorId = context.Director.Single(d => d.FirstName == "Ivan" && d.LastName == "Reitman").Id
- },
-new Movie
-{
-    //Id = 3,
-    Title = "Ghostbusters 2"
-,
-    ReleaseDate = DateTime.Parse
-("1986
--
-2
-- 23"),
- Genre = "Comedy"
-,
-Rating = 7,
-Price = 9.99M,
-DirectorId = context.Director.Single(d => d.FirstName == "Ivan" && d.LastName == "Reitman").Id
- },
-new Movie
-{
-    //Id = 4,
-    Title = "Rio Bravo"
-,
-    ReleaseDate = DateTime.Parse
-("1959
--
-4
-- 15"),
- Genre = "Western"
-,
-Rating = 4,
-Price = 3.99M,
-DirectorId = context.Director.Single(d => d.FirstName == "Howard" && d.LastName == "Hawks").Id
-
-}
- );
-                context.SaveChanges();
-                context.ActorMovie.AddRange
-               (
-                new ActorMovie { ActorId = 1, MovieId = 1 },
-                new ActorMovie { ActorId = 2, MovieId = 1 },
-                new ActorMovie { ActorId = 3, MovieId = 1 },
-                new ActorMovie { ActorId = 4, MovieId = 2 },
-                new ActorMovie { ActorId = 5, MovieId = 2 },
-                new ActorMovie { ActorId = 6, MovieId = 2 },
-                new ActorMovie { ActorId = 4, MovieId = 3 },
-                new ActorMovie { ActorId = 5, MovieId = 3 },
-                new ActorMovie { ActorId = 6, MovieId = 3 },
-                new ActorMovie { ActorId = 7, MovieId = 4 },
-                new ActorMovie { ActorId = 8, MovieId = 4 }
-                );
-                context.SaveChanges();*/
+                
 
             }
 

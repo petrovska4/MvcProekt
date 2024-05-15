@@ -12,8 +12,8 @@ using MvcProekt.Data;
 namespace MvcProekt.Migrations
 {
     [DbContext(typeof(MvcProektContext))]
-    [Migration("20240507162357_Review")]
-    partial class Review
+    [Migration("20240512155542_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,16 +59,21 @@ namespace MvcProekt.Migrations
 
             modelBuilder.Entity("MvcProekt.Models.BookGenre", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<int>("BookId")
                         .HasColumnType("int");
 
                     b.Property<int>("GenreId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
+                    b.HasKey("Id");
 
-                    b.HasKey("BookId", "GenreId");
+                    b.HasIndex("BookId");
 
                     b.HasIndex("GenreId");
 
@@ -116,7 +121,7 @@ namespace MvcProekt.Migrations
                     b.ToTable("Books");
                 });
 
-            modelBuilder.Entity("MvcProekt.Models.Genre", b =>
+            modelBuilder.Entity("MvcProekt.Models.Genres", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -130,7 +135,7 @@ namespace MvcProekt.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genre");
+                    b.ToTable("Genres");
                 });
 
             modelBuilder.Entity("MvcProekt.Models.Review", b =>
@@ -189,14 +194,12 @@ namespace MvcProekt.Migrations
                     b.HasOne("MvcProekt.Models.Books", "Book")
                         .WithMany("BookGenres")
                         .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("MvcProekt.Models.Genre", "Genre")
+                    b.HasOne("MvcProekt.Models.Genres", "Genre")
                         .WithMany("BookGenres")
                         .HasForeignKey("GenreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Book");
 
@@ -250,7 +253,7 @@ namespace MvcProekt.Migrations
                     b.Navigation("UserBooks");
                 });
 
-            modelBuilder.Entity("MvcProekt.Models.Genre", b =>
+            modelBuilder.Entity("MvcProekt.Models.Genres", b =>
                 {
                     b.Navigation("BookGenres");
                 });

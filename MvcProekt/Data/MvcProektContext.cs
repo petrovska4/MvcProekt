@@ -9,7 +9,7 @@ namespace MvcProekt.Data
 {
     public class MvcProektContext : DbContext
     {
-        public MvcProektContext (DbContextOptions<MvcProektContext> options)
+        public MvcProektContext(DbContextOptions<MvcProektContext> options)
             : base(options)
         {
         }
@@ -22,15 +22,12 @@ namespace MvcProekt.Data
         public DbSet<MvcProekt.Models.UserBooks> UserBooks { get; set; } = default!;
 
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        /*protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Books>()
+            *//*builder.Entity<Books>()
                 .HasOne<Author>(b => b.Author)
                 .WithMany(a => a.Books)
                 .HasForeignKey(b => b.AuthorId);
-
-            builder.Entity<BookGenre>()
-                .HasKey(bg => new { bg.BookId, bg.GenreId });
 
             builder.Entity<BookGenre>()
                 .HasOne(bg => bg.Book)
@@ -50,8 +47,8 @@ namespace MvcProekt.Data
             builder.Entity<UserBooks>()
                 .HasOne<Books>(ub => ub.Book)
                 .WithMany(b => b.UserBooks)
-                .HasForeignKey(ub => ub.BookId);
+                .HasForeignKey(ub => ub.BookId);*//*
 
-        }
+        }*/
     }
 }

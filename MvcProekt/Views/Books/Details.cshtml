@@ -4,63 +4,76 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
-
 <div>
-    <h4>Books</h4>
+    <h4>@Html.DisplayFor(model => model.Title)</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.YearPublished)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.YearPublished)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NumPages)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NumPages)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Publisher)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Publisher)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FrontPage)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FrontPage)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DownloadUrl)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DownloadUrl)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AuthorId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AuthorId)
-        </dd>
-    </dl>
+    <div style="display: flex; flex-direction: row;">
+        <div style="width: 400px; margin-right: 20px">
+            <img style="width: inherit" src="~/images/book@(Html.DisplayFor(model => model.Id)).jpg" />
+        </div>
+        <dl class="row">
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.YearPublished)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.YearPublished)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.NumPages)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.NumPages)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Publisher)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Publisher)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.DownloadUrl)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.DownloadUrl)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Author)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Author.FullName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.BookGenres)
+            </dt>
+            <dd class="col-sm-10">
+                @foreach (var genre in Model.BookGenres)
+                {
+                    <p>
+                        @genre.Genre.GenreName
+                    </p>
+                }
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Reviews)
+            </dt>
+            <dd class="col-sm-10">
+                @foreach (var review in Model.Reviews)
+                {
+                    <p>
+                        @review.Comment
+                    </p>
+                }
+            </dd>
+        </dl>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div style="margin-top: 20px">
+    <a asp-action="Edit" asp-route-id="Model.Id"><button type="button" class="btn btn-outline-success">Edit </button></a>
+    <a asp-action="Index"><button type="button" class="btn btn-outline-success">Back to List </button></a>
 </div>

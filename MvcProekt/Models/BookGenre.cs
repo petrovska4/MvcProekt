@@ -1,4 +1,7 @@
-﻿namespace MvcProekt.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace MvcProekt.Models
 {
     public class BookGenre
     {
