@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MvcProekt.Data;
 using MvcProekt.Models;
+using MvcProekt.ViewModels;
 
 namespace MvcProekt.Controllers
 {
@@ -20,9 +21,28 @@ namespace MvcProekt.Controllers
         }
 
         // GET: Authors
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchName, string searchSurname)
         {
-            return View(await _context.Author.ToListAsync());
+            var authorQuery = _context.Author.Include(a => a.Books).AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchName))
+            {
+                authorQuery = authorQuery.Where(a => a.FirstName.Contains(searchName));
+            }
+
+            if (!string.IsNullOrEmpty(searchSurname))
+            {
+                authorQuery = authorQuery.Where(a => a.LastName.Contains(searchSurname));
+            }
+
+            var viewModel = new BooksAuthorsViewModel
+            {
+                SearchName = searchName,
+                SearchSurname = searchSurname,
+                Authors = await authorQuery.ToListAsync()
+            };
+
+            return View(viewModel);
         }
 
         // GET: Authors/Details/5

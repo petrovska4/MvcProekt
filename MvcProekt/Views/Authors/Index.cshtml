@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MvcProekt.Models.Author>
+﻿@model MvcProekt.ViewModels.BooksAuthorsViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -9,51 +9,62 @@
 <p>
     <a asp-action="Create"><button type="button" class="btn btn-primary">Create New</button></a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Date)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Nationality)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Gender)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nationality)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Gender)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<form asp-controller="Authors" asp-action="Index" method="get">
+    <p>
+        <label for="name">Name:</label>
+        <input id="name" type="text" asp-for="SearchName" class="form-control" />
+        <label for="surname">Surname:</label>
+        <input id="surname" type="text" asp-for="SearchSurname" class="form-control" />
+        <input style="margin-top: 5px" type="submit" value="Filter" class="btn btn-outline-info" />
+    </p>
+</form>
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Authors[0].FirstName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Authors[0].LastName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Authors[0].Date)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Authors[0].Nationality)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Authors[0].Gender)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model.Authors) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nationality)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Gender)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
+</div>

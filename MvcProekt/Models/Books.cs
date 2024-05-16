@@ -21,7 +21,7 @@ namespace MvcProekt.Models
         public string? DownloadUrl { get; set;}
         public int AuthorId { get; set; }
         public Author? Author { get; set; }
-        public ICollection<BookGenre> BookGenres { get; set; }
+        public ICollection<BookGenre>? BookGenres { get; set; }
         public ICollection<Review>? Reviews { get; set; }
         public ICollection<UserBooks>? UserBooks { get; set; }
         public double AverageRating()

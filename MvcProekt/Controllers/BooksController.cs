@@ -82,6 +82,7 @@ namespace MvcProekt.Controllers
                 .Include(b => b.BookGenres).ThenInclude(bg => bg.Genre)
                 .Include(books => books.Reviews)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (books == null)
             {
                 return NotFound();
@@ -93,8 +94,22 @@ namespace MvcProekt.Controllers
         // GET: Books/Create
         public IActionResult Create()
         {
-            ViewData["AuthorId"] = new SelectList(_context.Author, "Id", "Id");
-            return View();
+            var genres = _context.Genres.OrderBy(g => g.GenreName).ToList();
+
+            var viewModel = new BookGenresCreateViewModel
+            {
+                Book = new Books(),
+                AuthorsList = _context.Author
+                    .OrderBy(a => a.FirstName)
+                    .Select(a => new SelectListItem
+                    {
+                        Value = a.Id.ToString(),
+                        Text = a.FullName,
+                    }).ToList(),
+                GenreList = new SelectList(genres, "Id", "GenreName")
+            };
+
+            return View(viewModel);
         }
 
         // POST: Books/Create
@@ -102,16 +117,31 @@ namespace MvcProekt.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,YearPublished,NumPages,Description,Publisher,FrontPage,DownloadUrl,AuthorId")] Books books)
+        public async Task<IActionResult> Create(BookGenresCreateViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(books);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    _context.Update(viewModel.Book);
+                    await _context.SaveChangesAsync();
+                    
+                    foreach( int genreId in viewModel.SelectedGenres)
+                    {
+                        _context.BookGenre.Add(new BookGenre { GenreId = genreId, BookId = viewModel.Book.Id });
+                    }
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("An error occurred while saving the entity changes.");
+                    Console.WriteLine(ex.InnerException?.Message);
+                    throw;
+                }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(_context.Author, "Id", "FullName", books.AuthorId);
-            return View(books);
+
+            return View(viewModel);
         }
 
         // GET: Books/Edit/5
@@ -132,7 +162,8 @@ namespace MvcProekt.Controllers
                 return NotFound();
             }
 
-            var genres = _context.Genres.OrderBy(s => s.GenreName).AsEnumerable();
+            var genres = _context.Genres.AsEnumerable();
+            genres = genres.OrderBy(s => s.GenreName);
 
             BookGenresEditViewModel viewModel = new BookGenresEditViewModel
             {
@@ -157,7 +188,7 @@ namespace MvcProekt.Controllers
                 return NotFound();
             }
 
-            if (!ModelState.IsValid)
+            /*if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values.SelectMany(v => v.Errors);
                 foreach (var error in errors)
@@ -165,10 +196,11 @@ namespace MvcProekt.Controllers
                     Console.WriteLine(error.ErrorMessage);
                 }
 
-                // Return the view with the viewModel so the user can correct the errors
+                var genres = _context.Genres.OrderBy(s => s.GenreName).AsEnumerable();
+                viewModel.GenreList = new MultiSelectList(genres, "Id", "GenreName");
+
                 ViewData["AuthorId"] = new SelectList(_context.Author, "Id", "FullName", viewModel.Book.AuthorId);
-                return View(viewModel);
-            }
+            }*/
 
             if (ModelState.IsValid)
             {
@@ -211,7 +243,7 @@ namespace MvcProekt.Controllers
             }
 
             ViewData["AuthorId"] = new SelectList(_context.Author, "Id", "FullName", viewModel.Book.AuthorId);
-            return View(viewModel.Book);
+            return View(viewModel);
         }
 
         // GET: Books/Delete/5

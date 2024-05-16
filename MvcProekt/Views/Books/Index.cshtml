@@ -11,12 +11,15 @@
 </p>
 <form asp-controller="Books" asp-action="Index" method="get">
     <p>
-        <select asp-for="BookGenre" asp-items="Model.Genres">
+        <label for="title">Title:</label>
+        <input id="title" type="text" asp-for="SearchString" class="form-control" />
+        <label for="author">Author:</label>
+        <input id="author" type="text" asp-for="AuthorSearchString" class="form-control" />
+        <label for="select" class="form-label mt-4">Genre:</label>
+        <select class="form-select" id="select" asp-for="BookGenre" asp-items="Model.Genres">
             <option value="">All</option>
         </select>
-        Title: <input type="text" asp-for="SearchString" />
-        Author: <input type="text" asp-for="AuthorSearchString" />
-        <input type="submit" value="Filter" />
+        <input style="margin-top: 5px" type="submit" value="Filter" class="btn btn-outline-info" />
     </p>
 </form>
 <div class="table-responsive">
@@ -29,28 +32,28 @@
                     @Html.DisplayNameFor(model => model.Books[0].Title)
                 </th>
                 <th>
+                    @Html.DisplayNameFor(model => model.Books[0].Author)
+                </th>
+                <th>
                     @Html.DisplayNameFor(model => model.Books[0].YearPublished)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Books[0].NumPages)
+                    Genre
                 </th>
                 <th>
+                    @Html.DisplayNameFor(model => model.Reviews)
+                </th>
+                <th></th>
+                @* <th>
                     @Html.DisplayNameFor(model => model.Books[0].Description)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Books[0].Publisher)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Books[0].Author)
+                    @Html.DisplayNameFor(model => model.Books[0].NumPages)
                 </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Reviews)
-                </th>
-                <th>
-                    Genre
-                </th>
-                <th></th>
-                <th></th>
+                <th></th> *@
             </tr>
         </thead>
         <tbody>
@@ -63,18 +66,6 @@
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.YearPublished)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NumPages)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Publisher)
-                </td>
-                <td>
                     @if (item.Author != null)
                     {
                         @Html.DisplayFor(modelItem => item.Author.FullName)
@@ -82,7 +73,7 @@
 
                 </td>
                 <td>
-                    @item.AverageRating()
+                    @Html.DisplayFor(modelItem => item.YearPublished)
                 </td>
                 <td>
                     @foreach (var genre in item.BookGenres)
@@ -93,7 +84,7 @@
                     }
                 </td>
                 <td>
-                    <a href="@Html.DisplayFor(modelItem => item.DownloadUrl)">Download here...</a>
+                    @item.AverageRating()
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id"><button type="button" class="btn btn-outline-success">Edit</button></a>
@@ -102,6 +93,18 @@
                     <p></p>
                     <a asp-action="Delete" asp-route-id="@item.Id"><button type="button" class="btn btn-outline-danger">Delete</button></a>
                 </td>
+                @* <td>
+                    @Html.DisplayFor(modelItem => item.NumPages)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Publisher)
+                </td>
+                <td>
+                    <a href="@Html.DisplayFor(modelItem => item.DownloadUrl)">Download here...</a>
+                </td> *@
             </tr>
     }
         </tbody>

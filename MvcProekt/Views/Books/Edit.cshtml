@@ -57,6 +57,7 @@
                 <label class="control-label">Genres</label>
                 <select asp-for="SelectedGenres" class="form-control js-example-basic-multiple"
                         asp-items="Model.GenreList"> </select>
+                <input type="hidden" asp-for="GenreList" />
                 <span asp-validation-for="SelectedGenres" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -74,11 +75,11 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    @* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         $(document).ready(function () {
             $("#SelectedGenres").select2();
         });
-    </script> *@
+    </script>
 }
