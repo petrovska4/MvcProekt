@@ -6,16 +6,18 @@
 
 <h1>Our Selection</h1>
 
-<p>
-    <a asp-action="Create"><button type="button" class="btn btn-primary">Create New</button></a>
-</p>
+@if (User.Identity.IsAuthenticated && User.IsInRole("Admin")){
+    <p>
+        <a asp-action="Create"><button type="button" class="btn btn-primary">Create New</button></a>
+    </p>
+}
 <form asp-controller="Books" asp-action="Index" method="get">
     <p>
         <label for="title">Title:</label>
         <input id="title" type="text" asp-for="SearchString" class="form-control" />
         <label for="author">Author:</label>
         <input id="author" type="text" asp-for="AuthorSearchString" class="form-control" />
-        <label for="select" class="form-label mt-4">Genre:</label>
+        <label for="select" class="form-label">Genre:</label>
         <select class="form-select" id="select" asp-for="BookGenre" asp-items="Model.Genres">
             <option value="">All</option>
         </select>
@@ -44,16 +46,6 @@
                     @Html.DisplayNameFor(model => model.Reviews)
                 </th>
                 <th></th>
-                @* <th>
-                    @Html.DisplayNameFor(model => model.Books[0].Description)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Books[0].Publisher)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Books[0].NumPages)
-                </th>
-                <th></th> *@
             </tr>
         </thead>
         <tbody>
@@ -87,24 +79,18 @@
                     @item.AverageRating()
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id"><button type="button" class="btn btn-outline-success">Edit</button></a>
-                    <p></p>
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id"><button type="button" class="btn btn-outline-success">Edit</button></a>
+                        <p></p>
+                    }
                     <a asp-action="Details" asp-route-id="@item.Id"><button type="button" class="btn btn-outline-success">Details</button></a>
-                    <p></p>
-                    <a asp-action="Delete" asp-route-id="@item.Id"><button type="button" class="btn btn-outline-danger">Delete</button></a>
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                    {
+                        <p></p>
+                        <a asp-action="Delete" asp-route-id="@item.Id"><button type="button" class="btn btn-outline-danger">Delete</button></a>
+                    }
                 </td>
-                @* <td>
-                    @Html.DisplayFor(modelItem => item.NumPages)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Publisher)
-                </td>
-                <td>
-                    <a href="@Html.DisplayFor(modelItem => item.DownloadUrl)">Download here...</a>
-                </td> *@
             </tr>
     }
         </tbody>

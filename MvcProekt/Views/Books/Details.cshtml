@@ -74,6 +74,9 @@
     </div>
 </div>
 <div style="margin-top: 20px">
-    <a asp-action="Edit" asp-route-id="Model.Id"><button type="button" class="btn btn-outline-success">Edit </button></a>
+    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+    {
+        <a asp-action="Edit" asp-route-id="Model.Id"><button type="button" class="btn btn-outline-success">Edit </button></a>
+    }
     <a asp-action="Index"><button type="button" class="btn btn-outline-success">Back to List </button></a>
 </div>

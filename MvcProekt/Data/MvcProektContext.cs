@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using MvcProekt.Areas.Identity.Data;
 using MvcProekt.Models;
 
 namespace MvcProekt.Data
 {
-    public class MvcProektContext : DbContext
+    public class MvcProektContext : IdentityDbContext<MvcProektUser>
     {
         public MvcProektContext(DbContextOptions<MvcProektContext> options)
             : base(options)
@@ -21,6 +23,11 @@ namespace MvcProekt.Data
         public DbSet<MvcProekt.Models.Review> Review { get; set; } = default!;
         public DbSet<MvcProekt.Models.UserBooks> UserBooks { get; set; } = default!;
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+        }
+        public DbSet<MvcProekt.Models.MyBooks> MyBooks { get; set; } = default!;
 
         /*protected override void OnModelCreating(ModelBuilder builder)
         {
