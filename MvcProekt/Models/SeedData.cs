@@ -19,6 +19,11 @@ namespace MvcProekt.Models
             var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var UserManager = serviceProvider.GetRequiredService<UserManager<MvcProektUser>>();
             IdentityResult roleResult;
+            var registeredRoleCheck = await RoleManager.RoleExistsAsync("Registered");
+            if (!registeredRoleCheck)
+            {
+                roleResult = await RoleManager.CreateAsync(new IdentityRole("Registered"));
+            }
             //Add Admin Role
             var roleCheck = await RoleManager.RoleExistsAsync("Admin");
             if (!roleCheck) { roleResult = await RoleManager.CreateAsync(new IdentityRole("Admin")); }
@@ -32,6 +37,15 @@ namespace MvcProekt.Models
                 IdentityResult chkUser = await UserManager.CreateAsync(User, userPWD);
                 //Add default User to Role Admin
                 if (chkUser.Succeeded) { var result1 = await UserManager.AddToRoleAsync(User, "Admin"); }
+            }
+
+            var allUsers = await UserManager.Users.ToListAsync();
+            foreach (var usr in allUsers)
+            {
+                if (!await UserManager.IsInRoleAsync(usr, "Registered"))
+                {
+                    await UserManager.AddToRoleAsync(usr, "Registered");
+                }
             }
         }
         public static void Initialize(IServiceProvider serviceProvider)

@@ -4,27 +4,95 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
-
 <div>
-    <h4>UserBooks</h4>
+    <h4>@Html.DisplayFor(model => model.Book.Title)</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AppUser)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AppUser)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BookId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BookId)
-        </dd>
-    </dl>
+    <div style="display: flex; flex-direction: row;">
+        <div style="width: 400px; margin-right: 20px">
+            <img style="width: inherit" src="@Html.DisplayFor(model => model.Book.FrontPage)" alt="Book cover" />
+        </div>
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Book.Description)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Book.Description)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Book.YearPublished)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Book.YearPublished)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Book.NumPages)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Book.NumPages)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Book.Publisher)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Book.Publisher)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Book.DownloadUrl)
+            </dt>
+            <dd class="col-sm-10">
+                <a href="@Html.DisplayFor(model => model.Book.DownloadUrl)">Download here...</a>
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Book.Author.FullName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Book.Author.FullName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Book.BookGenres)
+            </dt>
+            <dd class="col-sm-10">
+                @foreach (var genre in Model.Book.BookGenres)
+                {
+                    <p>
+                        @genre.Genre.GenreName
+                    </p>
+                }
+            </dd>
+            <hr />
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Book.Reviews)
+            </dt>
+            <dd class="col-sm-10">
+                @if (Model.Book.Reviews != null && Model.Book.Reviews.Count > 0)
+                {
+                    @foreach (var review in Model.Book.Reviews)
+                    {
+                        <div class="list-group-item">
+                            <h5 class="mb-1">@review.AppUser</h5>
+                            <p class="mb-1">@review.Comment</p>
+                            <small>Rating: @review.Rating</small>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>No reviews yet.</p>
+                }
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Registered"))
+                    {
+                        <td>
+                            <a asp-action="AddComment" ><button type="button" class="btn btn-outline-info">Add comment...</button></a>
+                        </td>
+                    }
+            </dd>
+        </dl>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div style="margin-top: 20px">
+    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+    {
+        <a asp-action="Edit" asp-route-id="Model.Id"><button type="button" class="btn btn-outline-success">Edit </button></a>
+    }
+    <a asp-action="Index"><button type="button" class="btn btn-outline-success">Back to List </button></a>
 </div>

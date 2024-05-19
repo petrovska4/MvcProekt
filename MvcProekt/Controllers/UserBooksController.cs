@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using MvcProekt.Areas.Identity.Data;
 using MvcProekt.Data;
 using MvcProekt.Models;
 
@@ -13,16 +15,35 @@ namespace MvcProekt.Controllers
     public class UserBooksController : Controller
     {
         private readonly MvcProektContext _context;
+        private readonly UserManager<MvcProektUser> _userManager;
 
-        public UserBooksController(MvcProektContext context)
+        public UserBooksController(MvcProektContext context, UserManager<MvcProektUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
+
 
         // GET: UserBooks
         public async Task<IActionResult> Index()
         {
-            return View(await _context.UserBooks.ToListAsync());
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+            var name = user.Email;
+
+            var userBooks = await _context.UserBooks
+                .Include(u => u.Book)
+                    .ThenInclude(b => b.BookGenres)
+                        .ThenInclude(bg => bg.Genre)
+                .Include(u => u.Book)
+                    .ThenInclude(b => b.Author)
+                .Where(ub => ub.AppUser == name)
+                .ToListAsync();
+
+            return View(userBooks);
         }
 
         // GET: UserBooks/Details/5
@@ -33,12 +54,21 @@ namespace MvcProekt.Controllers
                 return NotFound();
             }
 
-            var userBooks = await _context.UserBooks
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (userBooks == null)
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            if (user == null)
             {
-                return NotFound();
+                return NotFound("User not found");
             }
+            var name = user.Email;
+
+            var userBooks = await _context.UserBooks
+                .Include(u => u.Book)
+                    .ThenInclude(b => b.BookGenres)
+                        .ThenInclude(bg => bg.Genre)
+                .Include(u => u.Book)
+                    .ThenInclude(b => b.Author)
+                .Where(ub => ub.AppUser == name)
+                .FirstOrDefaultAsync(b => b.Book.Id == id);
 
             return View(userBooks);
         }
@@ -152,6 +182,11 @@ namespace MvcProekt.Controllers
         private bool UserBooksExists(int id)
         {
             return _context.UserBooks.Any(e => e.Id == id);
+        }
+
+        public async Task<IActionResult> AddComment(int id)
+        {
+            return View();
         }
     }
 }

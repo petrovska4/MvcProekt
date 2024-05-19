@@ -4,6 +4,7 @@ using MvcProekt.Data;
 using MvcProekt.Models;
 using Microsoft.AspNetCore.Identity;
 using MvcProekt.Areas.Identity.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MvcProektContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MvcProektContext") ?? throw new InvalidOperationException("Connection string 'MvcProektContext' not found.")));

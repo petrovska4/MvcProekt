@@ -6,8 +6,10 @@ namespace MvcProekt.ViewModels
 {
     public class BookGenresEditViewModel
     {
-        public Books Book { get; set; }
+        public Books? Book { get; set; }
         public IEnumerable<SelectListItem>? GenreList { get; set; }
         public IEnumerable<int>? SelectedGenres { get; set; }
+        public IFormFile? FrontPageFile { get; set; }
+        public IFormFile? PdfFile { get; set; }
     }
 }

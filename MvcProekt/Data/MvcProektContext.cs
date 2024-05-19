@@ -27,7 +27,6 @@ namespace MvcProekt.Data
         {
             base.OnModelCreating(builder);
         }
-        public DbSet<MvcProekt.Models.MyBooks> MyBooks { get; set; } = default!;
 
         /*protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Index";
+    var showAlert = false;
 }
 
 <h1>Our Selection</h1>
@@ -52,7 +53,7 @@
         @foreach (var item in Model.Books) {
             <tr>
                 <td>
-                    <img height="150px" src="~/images/book@(item.Id).jpg"/>
+                    <img height="150px" src="@Html.DisplayFor(modelItem => item.FrontPage)" alt="Book cover">
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Title)
@@ -70,7 +71,7 @@
                 <td>
                     @foreach (var genre in item.BookGenres)
                     {
-                        <a asp-controller="Actors" asp-action="Details" asp-route-id="@genre.GenreId">
+                        <a asp-controller="Genres" asp-action="Details" asp-route-id="@genre.GenreId">
                             @genre.Genre.GenreName
                         </a> <br />
                     }
@@ -90,9 +91,36 @@
                         <p></p>
                         <a asp-action="Delete" asp-route-id="@item.Id"><button type="button" class="btn btn-outline-danger">Delete</button></a>
                     }
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a href="@Url.Action("IndexById","Books",new {id = item.Id})" id="customLink">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart2" viewBox="0 0 16 16">
+                                <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0" />
+                            </svg>
+                        </a>
+                    }
                 </td>
             </tr>
     }
         </tbody>
+        @* <div class="alert alert-dismissible alert-success" id="customAlert" style="display: none;">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <h4 class="alert-heading">Successful!</h4>
+            <p class="mb-0">Book added to My Books.</p>
+        </div> *@
     </table>
 </div>
+
+@* <script>
+    document.getElementById('customLink').addEventListener('click', function (event) {
+        event.preventDefault(); // Prevent the default link click behavior
+        var alert = document.getElementById('customAlert');
+        alert.style.display = 'block'; // Show the alert
+
+        // Wait for a few seconds before redirecting
+        setTimeout(function () {
+            window.location.href = event.target.closest('a').href; // Redirect to the link's href
+        }, 2000); // Adjust the delay as needed (2000ms = 2 seconds)
+    });
+</script> *@
+

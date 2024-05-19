@@ -9,5 +9,7 @@ namespace MvcProekt.ViewModel
         public IEnumerable<int>? SelectedGenres { get; set; }
         public IEnumerable<SelectListItem>? GenreList { get; set; }
         public IEnumerable<SelectListItem>? AuthorsList { get; set; }
+        public IFormFile? FrontPageFile { get; set; }
+        public IFormFile? PdfFile { get; set; }
     }
 }

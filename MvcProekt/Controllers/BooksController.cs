@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using MvcProekt.Areas.Identity.Data;
 using MvcProekt.Data;
+using MvcProekt.Migrations;
 using MvcProekt.Models;
 using MvcProekt.ViewModel;
 using MvcProekt.ViewModels;
@@ -16,10 +21,14 @@ namespace MvcProekt.Controllers
     public class BooksController : Controller
     {
         private readonly MvcProektContext _context;
+        private readonly UserManager<MvcProektUser> _userManager;
+        private readonly IWebHostEnvironment _environment;
 
-        public BooksController(MvcProektContext context)
+        public BooksController(MvcProektContext context, UserManager<MvcProektUser> userManager, IWebHostEnvironment environment)
         {
             _context = context;
+            _userManager = userManager;
+            _environment = environment;
         }
 
         // GET: Books
@@ -38,7 +47,7 @@ namespace MvcProekt.Controllers
                 .AsQueryable();
 
             var authorsQuery = _context.Author.AsQueryable();
-            
+
             if (!string.IsNullOrEmpty(bookGenre))
             {
                 booksQuery = booksQuery.Where(b => b.BookGenres.Any(bg => bg.Genre.GenreName == bookGenre));
@@ -48,7 +57,7 @@ namespace MvcProekt.Controllers
             {
                 booksQuery = booksQuery.Where(b => b.Title.Contains(searchString));
             }
-            if (!string.IsNullOrEmpty(authorSearchString)) 
+            if (!string.IsNullOrEmpty(authorSearchString))
             {
                 booksQuery = booksQuery.Where(a => (a.Author.FirstName + " " + a.Author.LastName).Contains(authorSearchString));
             }
@@ -68,6 +77,63 @@ namespace MvcProekt.Controllers
             };
 
             return View(viewModel);
+        }
+
+        public async Task<IActionResult> IndexById(int id)
+        {
+            //knigata shto treba da se dodade
+            var book = await _context.Books
+                .Include(b => b.Author)
+                .Include(b => b.BookGenres).ThenInclude(bg => bg.Genre)
+                .Include(books => books.Reviews)
+                .FirstOrDefaultAsync(b => b.Id == id);
+
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+            var name = user.Email;
+
+            var userBooks = await _context.UserBooks
+                .Include(u => u.Book)
+                    .ThenInclude(b => b.BookGenres)
+                        .ThenInclude(bg => bg.Genre)
+                .Include(u => u.Book)
+                    .ThenInclude(b => b.Author)
+                .Where(ub => ub.AppUser == name)
+                .ToListAsync();
+
+            var exist = userBooks.Any(b => b.Book.Id == id);
+
+            if (exist)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            var newMyBook = new UserBooks
+            {
+                BookId = id,
+                AppUser = name
+            };
+
+            _context.UserBooks.Add(newMyBook);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Books/Details/5
@@ -124,6 +190,37 @@ namespace MvcProekt.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (viewModel.FrontPageFile != null && viewModel.FrontPageFile.Length > 0)
+                {
+                    string uploadsFolder = Path.Combine(_environment.WebRootPath, "images");
+                    string uniqueFileName = Guid.NewGuid().ToString() + "_" + viewModel.FrontPageFile.FileName;
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await viewModel.FrontPageFile.CopyToAsync(fileStream);
+                    }
+
+                    // Save file path in the database
+                    viewModel.Book.FrontPage = "/images/" + uniqueFileName;
+                    //book.FrontPage = filePath;
+                }
+                if (viewModel.PdfFile != null && viewModel.PdfFile.Length > 0)
+                {
+                    string uploadsFolder = Path.Combine(_environment.WebRootPath, "images");
+                    string uniquePdfFileName = Guid.NewGuid().ToString() + "_" + viewModel.PdfFile.FileName;
+                    string pdfFilePath = Path.Combine(uploadsFolder, uniquePdfFileName);
+
+                    using (var pdfFileStream = new FileStream(pdfFilePath, FileMode.Create))
+                    {
+                        await viewModel.PdfFile.CopyToAsync(pdfFileStream);
+                    }
+
+                    // Save PDF file path in the database
+                    viewModel.Book.DownloadUrl = "/images/" + uniquePdfFileName;
+                    //book.DownloadURL = pdfFilePath;
+                }
+
                 try
                 {
                     _context.Update(viewModel.Book);
@@ -211,6 +308,46 @@ namespace MvcProekt.Controllers
             {
                 try
                 {
+                    if (viewModel.FrontPageFile != null && viewModel.FrontPageFile.Length > 0)
+                    {
+                        // Save FrontPageFile
+                        string uniqueFrontPageFileName = Guid.NewGuid().ToString() + "_" + viewModel.FrontPageFile.FileName;
+                        string frontPageFilePath = Path.Combine(_environment.WebRootPath, "images", uniqueFrontPageFileName);
+
+                        using (var fileStream = new FileStream(frontPageFilePath, FileMode.Create))
+                        {
+                            await viewModel.FrontPageFile.CopyToAsync(fileStream);
+                        }
+
+                        viewModel.Book.FrontPage = "/images/" + uniqueFrontPageFileName; // Update file path
+                    }
+
+                    // Check if PdfFile is uploaded
+                    if (viewModel.PdfFile != null && viewModel.PdfFile.Length > 0)
+                    {
+                        // Save PdfFile
+                        string uniquePdfFileName = Guid.NewGuid().ToString() + "_" + viewModel.PdfFile.FileName;
+                        string pdfFilePath = Path.Combine(_environment.WebRootPath, "images", uniquePdfFileName);
+
+                        using (var fileStream = new FileStream(pdfFilePath, FileMode.Create))
+                        {
+                            await viewModel.PdfFile.CopyToAsync(fileStream);
+                        }
+
+                        viewModel.Book.DownloadUrl = "/images/" + uniquePdfFileName; // Update file path
+                    }
+
+                    // If FrontPageFile and PdfFile are not uploaded, retain the existing values
+                    if (viewModel.FrontPageFile == null && viewModel.PdfFile == null)
+                    {
+                        var existingBook = _context.Books.AsNoTracking().FirstOrDefault(b => b.Id == id);
+                        if (existingBook != null)
+                        {
+                            viewModel.Book.FrontPage = existingBook.FrontPage;
+                            viewModel.Book.DownloadUrl = existingBook.DownloadUrl;
+                        }
+                    }
+
                     _context.Update(viewModel.Book);
                     await _context.SaveChangesAsync();
 
@@ -298,5 +435,27 @@ namespace MvcProekt.Controllers
         {
             return _context.Books.Any(e => e.Id == id);
         }
+
+        public IActionResult ViewFile(string fileName)
+        {
+            var filePath = Path.Combine(_environment.WebRootPath, "images", fileName);
+            if (System.IO.File.Exists(filePath))
+            {
+                var provider = new FileExtensionContentTypeProvider();
+                if (provider.TryGetContentType(fileName, out var contentType))
+                {
+                    return PhysicalFile(filePath, contentType);
+                }
+                else
+                {
+                    return PhysicalFile(filePath, "application/octet-stream"); // Default to octet-stream if MIME type cannot be determined
+                }
+            }
+            else
+            {
+                return NotFound(); // Return 404 if the file does not exist
+            }
+        }
     }
+
 }

@@ -9,7 +9,7 @@
     <hr />
     <div style="display: flex; flex-direction: row;">
         <div style="width: 400px; margin-right: 20px">
-            <img style="width: inherit" src="~/images/book@(Html.DisplayFor(model => model.Id)).jpg" />
+            <img style="width: inherit" src="@Html.DisplayFor(model => model.FrontPage)" alt="Book cover" />
         </div>
         <dl class="row">
             <dt class = "col-sm-2">
@@ -59,15 +59,25 @@
                     </p>
                 }
             </dd>
+            <hr />
             <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.Reviews)
             </dt>
             <dd class="col-sm-10">
-                @foreach (var review in Model.Reviews)
+                @if (Model.Reviews != null && Model.Reviews.Count > 0)
                 {
-                    <p>
-                        @review.Comment
-                    </p>
+                    @foreach (var review in Model.Reviews)
+                    {
+                        <div class="list-group-item">
+                            <h5 class="mb-1">@review.AppUser</h5>
+                            <p class="mb-1">@review.Comment</p>
+                            <small>Rating: @review.Rating</small>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>No reviews yet.</p>
                 }
             </dd>
         </dl>
