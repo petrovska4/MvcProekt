@@ -29,7 +29,8 @@ namespace MvcProekt.Models
             if (Reviews != null && Reviews.Any())
             {
                 int totalRating = (int)Reviews.Sum(r => r.Rating);
-                return (double)totalRating / Reviews.Count;
+                double average = (double)totalRating / Reviews.Count;
+                return Math.Round(average, 1);
             }
 
             return 0;

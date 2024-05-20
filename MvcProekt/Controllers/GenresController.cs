@@ -22,7 +22,11 @@ namespace MvcProekt.Controllers
         // GET: Genres
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Genres.ToListAsync());
+            var genres = await _context.Genres
+                .Include(bg => bg.BookGenres)
+                .ThenInclude(b => b.Book)
+                .ToListAsync();
+            return View(genres);
         }
 
         // GET: Genres/Details/5
@@ -34,6 +38,8 @@ namespace MvcProekt.Controllers
             }
 
             var genre = await _context.Genres
+                .Include(bg => bg.BookGenres)
+                .ThenInclude(b => b.Book)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (genre == null)
             {

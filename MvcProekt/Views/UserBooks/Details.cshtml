@@ -64,7 +64,7 @@
                 @Html.DisplayNameFor(model => model.Book.Reviews)
             </dt>
             <dd class="col-sm-10">
-                @if (Model.Book.Reviews != null && Model.Book.Reviews.Count > 0)
+                @if (Model.Book.Reviews != null)
                 {
                     @foreach (var review in Model.Book.Reviews)
                     {
@@ -81,9 +81,17 @@
                 }
                     @if (User.Identity.IsAuthenticated && User.IsInRole("Registered"))
                     {
-                        <td>
-                            <a asp-action="AddComment" ><button type="button" class="btn btn-outline-info">Add comment...</button></a>
-                        </td>
+                    <form asp-action="AddComment" class="list-group-item" method="post">
+                        <label>Your thoughts:</label>
+                        <input type="hidden" name="id" value="@Model.Book.Id" />
+                        <input class="form-control" name="input" />
+                        <label>Rating:</label>
+                        <input id="rating" class="form-control" name="rating" />
+                            <td>
+                                <p></p>
+                                <button type="submit" class="btn btn-outline-info">Add comment...</button>
+                            </td>
+                    </form>
                     }
             </dd>
         </dl>
@@ -94,5 +102,5 @@
     {
         <a asp-action="Edit" asp-route-id="Model.Id"><button type="button" class="btn btn-outline-success">Edit </button></a>
     }
-    <a asp-action="Index"><button type="button" class="btn btn-outline-success">Back to List </button></a>
+    <a asp-action="Index"><button type="button" class="btn btn-outline-secondary">Back to the list</button></a>
 </div>

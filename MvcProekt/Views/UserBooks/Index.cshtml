@@ -24,21 +24,11 @@
                 </td>
                 <td>@Html.DisplayFor(modelItem => item.Book.Title)</td>
                 <td>
-                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-                    {
-                        <a asp-action="Edit" asp-route-id="@item.Id"><button type="button" class="btn btn-outline-success">Edit</button></a>
-                        <p></p>
-                    }
                     <a asp-action="Details" asp-route-id="@item.Book.Id"><button type="button" class="btn btn-outline-success">Details</button></a>
                     @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                     {
                         <p></p>
                         <a asp-action="Delete" asp-route-id="@item.Id"><button type="button" class="btn btn-outline-danger">Delete</button></a>
-                    }
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <p></p>
-                        <a asp-action="AddComment" asp-route-id="@item.Id"><button type="button" class="btn btn-outline-info">Add Comment</button></a>
                     }
                 </td>
             </tr>

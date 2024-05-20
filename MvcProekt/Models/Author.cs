@@ -7,8 +7,10 @@ namespace MvcProekt.Models
         [Display(Name = "AuthorId")]
         public int Id { get; set; }
         [StringLength(50)]
+        [Display(Name = "Name")]
         public string? FirstName { get; set; }
         [StringLength(50)]
+        [Display(Name = "Surname")]
         public string? LastName { get; set;}
         public DateOnly Date { get; set; }
         [StringLength(50)]

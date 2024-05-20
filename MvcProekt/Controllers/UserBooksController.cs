@@ -40,6 +40,8 @@ namespace MvcProekt.Controllers
                         .ThenInclude(bg => bg.Genre)
                 .Include(u => u.Book)
                     .ThenInclude(b => b.Author)
+                .Include(u => u.Book)
+                    .ThenInclude(b => b.Reviews)
                 .Where(ub => ub.AppUser == name)
                 .ToListAsync();
 
@@ -67,6 +69,8 @@ namespace MvcProekt.Controllers
                         .ThenInclude(bg => bg.Genre)
                 .Include(u => u.Book)
                     .ThenInclude(b => b.Author)
+                .Include(u => u.Book)
+                    .ThenInclude(b => b.Reviews)
                 .Where(ub => ub.AppUser == name)
                 .FirstOrDefaultAsync(b => b.Book.Id == id);
 
@@ -90,57 +94,6 @@ namespace MvcProekt.Controllers
             {
                 _context.Add(userBooks);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(userBooks);
-        }
-
-        // GET: UserBooks/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var userBooks = await _context.UserBooks.FindAsync(id);
-            if (userBooks == null)
-            {
-                return NotFound();
-            }
-            return View(userBooks);
-        }
-
-        // POST: UserBooks/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,AppUser,BookId")] UserBooks userBooks)
-        {
-            if (id != userBooks.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(userBooks);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserBooksExists(userBooks.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
                 return RedirectToAction(nameof(Index));
             }
             return View(userBooks);
@@ -183,10 +136,31 @@ namespace MvcProekt.Controllers
         {
             return _context.UserBooks.Any(e => e.Id == id);
         }
-
-        public async Task<IActionResult> AddComment(int id)
+        [HttpPost]
+        public async Task<IActionResult> AddComment(int id, string input, int rating)
         {
-            return View();
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+            var name = user.Email;
+
+            var book = await _context.Books.FirstOrDefaultAsync(e => e.Id == id);
+
+            var review = new Review
+            {
+                BookId = book.Id,
+                AppUser = name,
+                Comment = input,
+                Rating = rating,
+                Book = book
+            };
+
+            _context.Review.Add(review);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
