@@ -9,8 +9,6 @@
 <div>
     <h4>Author</h4>
     <hr />
-    @foreach(var book in Model.Books)
-    {
         <dl class="row">
             <dt class = "col-sm-2">
                 @Html.DisplayNameFor(model => model.FirstName)
@@ -42,6 +40,9 @@
             <dd class = "col-sm-10">
                 @Html.DisplayFor(model => model.Gender)
             </dd>
+        <hr />
+    @foreach(var book in Model.Books)
+    {
             <dt class="col-sm-2">
                 Book Title
             </dt>
@@ -66,7 +67,8 @@
                     }
                 }
             </dd>
-        </dl>
         <hr />
     }
+        </dl>
+        
 </div>

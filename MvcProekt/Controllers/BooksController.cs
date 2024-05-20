@@ -11,7 +11,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using MvcProekt.Areas.Identity.Data;
 using MvcProekt.Data;
-using MvcProekt.Migrations;
 using MvcProekt.Models;
 using MvcProekt.ViewModel;
 using MvcProekt.ViewModels;

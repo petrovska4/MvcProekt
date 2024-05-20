@@ -72,9 +72,9 @@
                 <td>
                     @foreach (var genre in item.BookGenres)
                     {
-                        <a asp-controller="Genres" asp-action="Details" asp-route-id="@genre.GenreId">
+                        <p>
                             @genre.Genre.GenreName
-                        </a> <br />
+                        </p>
                     }
                 </td>
                 <td>

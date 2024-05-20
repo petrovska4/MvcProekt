@@ -12,8 +12,8 @@ using MvcProekt.Data;
 namespace MvcProekt.Migrations
 {
     [DbContext(typeof(MvcProektContext))]
-    [Migration("20240516132830_IdentityAdded")]
-    partial class IdentityAdded
+    [Migration("20240520211327_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

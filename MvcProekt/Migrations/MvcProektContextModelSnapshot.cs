@@ -266,16 +266,11 @@ namespace MvcProekt.Migrations
                     b.Property<int>("GenreId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MyBooksId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("BookId");
 
                     b.HasIndex("GenreId");
-
-                    b.HasIndex("MyBooksId");
 
                     b.ToTable("BookGenre");
                 });
@@ -338,50 +333,6 @@ namespace MvcProekt.Migrations
                     b.ToTable("Genres");
                 });
 
-            modelBuilder.Entity("MvcProekt.Models.MyBooks", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AuthorId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("AverageRating")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DownloadUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FrontPage")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("NumPages")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Publisher")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Title")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("YearPublished")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
-
-                    b.ToTable("MyBooks");
-                });
-
             modelBuilder.Entity("MvcProekt.Models.Review", b =>
                 {
                     b.Property<int>("Id")
@@ -401,17 +352,12 @@ namespace MvcProekt.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int?>("MyBooksId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BookId");
-
-                    b.HasIndex("MyBooksId");
 
                     b.ToTable("Review");
                 });
@@ -431,14 +377,9 @@ namespace MvcProekt.Migrations
                     b.Property<int>("BookId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MyBooksId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("BookId");
-
-                    b.HasIndex("MyBooksId");
 
                     b.ToTable("UserBooks");
                 });
@@ -508,10 +449,6 @@ namespace MvcProekt.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MvcProekt.Models.MyBooks", null)
-                        .WithMany("BookGenres")
-                        .HasForeignKey("MyBooksId");
-
                     b.Navigation("Book");
 
                     b.Navigation("Genre");
@@ -528,17 +465,6 @@ namespace MvcProekt.Migrations
                     b.Navigation("Author");
                 });
 
-            modelBuilder.Entity("MvcProekt.Models.MyBooks", b =>
-                {
-                    b.HasOne("MvcProekt.Models.Author", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Author");
-                });
-
             modelBuilder.Entity("MvcProekt.Models.Review", b =>
                 {
                     b.HasOne("MvcProekt.Models.Books", "Book")
@@ -546,10 +472,6 @@ namespace MvcProekt.Migrations
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("MvcProekt.Models.MyBooks", null)
-                        .WithMany("Reviews")
-                        .HasForeignKey("MyBooksId");
 
                     b.Navigation("Book");
                 });
@@ -561,10 +483,6 @@ namespace MvcProekt.Migrations
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("MvcProekt.Models.MyBooks", null)
-                        .WithMany("UserBooks")
-                        .HasForeignKey("MyBooksId");
 
                     b.Navigation("Book");
                 });
@@ -586,15 +504,6 @@ namespace MvcProekt.Migrations
             modelBuilder.Entity("MvcProekt.Models.Genres", b =>
                 {
                     b.Navigation("BookGenres");
-                });
-
-            modelBuilder.Entity("MvcProekt.Models.MyBooks", b =>
-                {
-                    b.Navigation("BookGenres");
-
-                    b.Navigation("Reviews");
-
-                    b.Navigation("UserBooks");
                 });
 #pragma warning restore 612, 618
         }

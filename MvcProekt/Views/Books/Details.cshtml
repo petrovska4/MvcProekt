@@ -52,11 +52,18 @@
                 @Html.DisplayNameFor(model => model.BookGenres)
             </dt>
             <dd class="col-sm-10">
-                @foreach (var genre in Model.BookGenres)
-                {
-                    <p>
-                        @genre.Genre.GenreName
-                    </p>
+                @{
+                    var genres = Model.BookGenres.ToList();
+                    for (int i = 0; i < genres.Count; i++)
+                    {
+                        <span>
+                            @genres[i].Genre.GenreName
+                        </span>
+                        @if (i < genres.Count - 1)
+                        {
+                            @:,
+                        }
+                    }
                 }
             </dd>
             <hr />
@@ -73,6 +80,7 @@
                             <p class="mb-1">@review.Comment</p>
                             <small>Rating: @review.Rating</small>
                         </div>
+                        <hr />
                     }
                 }
                 else

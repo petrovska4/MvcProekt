@@ -7,9 +7,12 @@
 <h1>Genres</h1>
 <hr />
 
-<p>
-    <a asp-action="Create"><button type="button" class="btn btn-primary">Create</button></a>
-</p>
+@if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+{
+    <p>
+        <a asp-action="Create"><button type="button" class="btn btn-primary">Create</button></a>
+    </p>
+}
 
 <div>
     @foreach(var model in Model)

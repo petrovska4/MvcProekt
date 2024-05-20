@@ -221,97 +221,9 @@ namespace MvcProekt.Models
                 context.SaveChanges();
 
                 context.UserBooks.AddRange(
-                    new UserBooks
-                    {
-                        BookId = 1,
-                        AppUser = "User 1"
-                    },
-                    new UserBooks
-                    {
-                        BookId = 1,
-                        AppUser = "User 2"
-                    },
-                    new UserBooks
-                    {
-                        BookId = 2,
-                        AppUser = "User 3"
-                    },
-                    new UserBooks
-                    {
-                        BookId = 1,
-                        AppUser = "User 4"
-                    },
-                    new UserBooks
-                    {
-                        BookId = 1,
-                        AppUser = "User 5"
-                    },
-                    new UserBooks
-                    {
-                        BookId = 2,
-                        AppUser = "User 5"
-                    },
-                    new UserBooks
-                    {
-                        BookId = 2,
-                        AppUser = "User 6"
-                    },
-                    new UserBooks
-                    {
-                        BookId = 1,
-                        AppUser = "User 7"
-                    }
+                    
                 );
                 context.SaveChanges();
-
-                // Look for any movies.
-                /*if (context.Books.Any() || context.Author.Any() || context.Genres.Any() || context.UserBooks.Any() || context.BookGenre.Any())
-                {
-                    // Retrieve the books you want to delete
-                    var booksToDelete = context.Books.Where(book => book.Title == "War and Peace" || book.Title == "Crime and Punishment").ToList();
-
-                    // Delete the retrieved books
-                    context.Books.RemoveRange(booksToDelete);
-
-                    // Save changes to the database
-                    context.SaveChanges();
-
-                    var authorToDelete = context.Author.Where(author => author.FirstName == "Leo" || author.FirstName == "Fyodor").ToList();
-
-                    // Delete the retrieved books
-                    context.Author.RemoveRange(authorToDelete);
-
-                    // Save changes to the database
-                    context.SaveChanges();
-
-                    var genreToDelete = context.Genres.Where(genre => genre.GenreName == "philosophical" || genre.GenreName == "realism"
-                    || genre.GenreName == "historical" || genre.GenreName == "war literature").ToList();
-
-                    // Delete the retrieved books
-                    context.Genres.RemoveRange(genreToDelete);
-
-                    // Save changes to the database
-                    context.SaveChanges();
-
-                    var reviewToDelete = context.Review.Where(review => review.BookId == 1 || review.BookId == 2).ToList();
-
-                    // Delete the retrieved books
-                    context.Review.RemoveRange(reviewToDelete);
-
-                    // Save changes to the database
-                    context.SaveChanges();
-
-                    var userBooksToDelete = context.UserBooks.Where(ub => ub.BookId == 1 || ub.BookId == 2).ToList();
-
-                    // Delete the retrieved books
-                    context.UserBooks.RemoveRange(userBooksToDelete);
-
-                    // Save changes to the database
-                    context.SaveChanges();
-
-
-                    return; // DB has been seeded
-                }*/
             }
 
         }
